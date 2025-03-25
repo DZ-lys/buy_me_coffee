@@ -1,14 +1,15 @@
 import { Coffee } from "lucide-react";
+import Image from "next/image";
 
 export const LeftLayout = () => {
   return (
     <div className="flex flex-col justify-center items-center w-[50%] h-[100vh] bg-amber-400 ">
-      <div className="flex absolute gap-2 w-36 h-5 items-center top-8 left-20 ">
+      <div className="flex absolute gap-2 w-37 h-5 items-center top-8 left-20 ">
         <Coffee />
         <h2 className="font-bold text-base ">Buy Me Coffee</h2>
       </div>
       <div className="flex flex-col gap-6 items-center w-[28.438rem] h-96">
-        <img
+        <Image
           width={240}
           height={240}
           src="https://res.cloudinary.com/da889nybx/image/upload/v1742804149/gcgphmymipztl6sij30m.png"
