@@ -2,8 +2,38 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 function signUp() {
+  const [name, setName] = useState("");
+  const [errors, setErrors] = useState<{ name?: string }>({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    validateForm();
+  }, [name]);
+
+  const validateForm = () => {
+    let errors: { name?: string } = {};
+
+    if (!name) {
+      errors.name = "Username is required";
+    }
+
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+
+  const handleSubmit = () => {
+    if (isFormValid) {
+      console.log("form submit successfull");
+    } else {
+      console.log("form has errors");
+    }
+  };
+
+  console.log(setName);
+
   const router = useRouter();
   return (
     <div className="flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh] ">
@@ -27,13 +57,19 @@ function signUp() {
         <h5 className="text-sm font-medium text-[#09090b] ">Username</h5>
         <Input
           placeholder="Enter username here"
+          value={name}
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7] "
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
         />
+        {errors.name && <p className="text-red-400">{errors.name}</p>}
       </div>
       <div>
         <Button
+          disabled={!isFormValid}
           onClick={() => router.push("/sign-email")}
-          className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b] opacity-20 "
+          className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b] hover:cursor-pointer "
         >
           continue
         </Button>
