@@ -46,7 +46,7 @@ const signEmailPass = () => {
   const router = useRouter();
   return (
     <div className="flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">
-      <div className="flex absolute  top-8 left-[1085px]">
+      <div className="flex absolute top-8 right-20">
         <Button
           onClick={() => router.push("/log-in")}
           className="px-4 py-2 rounded-md bg-[#f4f4f5] text-[#09090b] h-10 w-[4.5rem] "
@@ -90,7 +90,7 @@ const signEmailPass = () => {
       </div>
       <div>
         <Button
-          onClick={handleSubmit}
+          onClick={() => router.push("/create-profile")}
           disabled={!isFormValid}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b]"
         >

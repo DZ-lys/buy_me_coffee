@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { LeftLayout } from "./_components/LeftSide";
+import { LeftLayout } from "../_components/LeftSide";
 
 type Props = {
   children: ReactNode;
