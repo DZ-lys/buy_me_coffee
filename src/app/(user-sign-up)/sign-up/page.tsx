@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { UserType } from "@/utils/type";
+import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -8,6 +10,14 @@ function signUp() {
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [data, setData] = useState<UserType[] | null>(null);
+
+  useEffect(() => {
+    fetch("api/sign-up")
+      .then((data) => data.json())
+      .then((json) => setData(json.data));
+  }, []);
+  console.log(data);
 
   useEffect(() => {
     validateForm();
@@ -19,17 +29,12 @@ function signUp() {
     if (!name) {
       errors.name = "Username is required";
     }
+    if (data && data.some((user) => user.username === name)) {
+      errors.name = "Username is already taken";
+    }
 
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  };
-
-  const handleSubmit = () => {
-    if (isFormValid) {
-      console.log("form submit successfull");
-    } else {
-      console.log("form has errors");
-    }
   };
 
   const router = useRouter();
@@ -61,7 +66,13 @@ function signUp() {
             setName(e.target.value);
           }}
         />
-        {errors.name && <p className="text-red-400">{errors.name}</p>}
+        {errors.name && (
+          <div className="flex gap-1 items-center">
+            {" "}
+            <XCircle className="text-red-400 w-5 h-5" />
+            <p className="text-red-400">{errors.name}</p>
+          </div>
+        )}
       </div>
       <div>
         <Button

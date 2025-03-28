@@ -9,7 +9,7 @@ export const LeftMenu = () => {
     <div className="w-64 h-40 flex flex-col gap-1  ">
       <div
         onClick={() => route.push("/")}
-        className="w-full h-9 rounded-b-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5]"
+        className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5]"
       >
         <button className="font-medium text-sm hover:cursor-pointer ">
           Home
@@ -17,13 +17,13 @@ export const LeftMenu = () => {
       </div>
       <div
         onClick={() => route.push("/explore")}
-        className="w-full h-9 rounded-b-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] "
+        className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] "
       >
         <button className="font-medium text-sm hover:cursor-pointer ">
           Explore
         </button>
       </div>
-      <div className="w-full h-9 rounded-b-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] flex items-center gap-4 ">
+      <div className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] flex items-center gap-4 ">
         <button className="font-medium text-sm hover:cursor-pointer">
           View page
         </button>
@@ -31,7 +31,7 @@ export const LeftMenu = () => {
       </div>
       <div
         onClick={() => route.push("/account-settings")}
-        className="w-full h-9 rounded-b-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] "
+        className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] "
       >
         <button className="font-medium text-sm hover:cursor-pointer ">
           Account settings

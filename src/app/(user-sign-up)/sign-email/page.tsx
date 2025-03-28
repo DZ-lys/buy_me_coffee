@@ -1,16 +1,26 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { UserType } from "@/utils/type";
+import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const signEmailPass = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; passsword?: string }>(
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
   const [isFormValid, setIsFormValid] = useState(false);
+  const [data, setData] = useState<UserType[] | null>(null);
+
+  useEffect(() => {
+    fetch("api/sign-up")
+      .then((data) => data.json())
+      .then((json) => setData(json.data));
+  }, []);
+  console.log(data);
 
   useEffect(() => {
     validateForm();
@@ -23,24 +33,21 @@ const signEmailPass = () => {
       errors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       errors.email = "Email is invalid";
+    } else if (data && data.some((user) => user.email === email)) {
+      errors.email = "Email is already in use";
     }
-
     if (!password) {
       errors.password = "Password is required";
     } else if (password.length < 6) {
       errors.password = "Password must be at least 6 characters";
+    } else if (password.search(/[A-Z]/) === -1) {
+      errors.password = "Password must contain at least one upper case letter";
+    } else if (password.search(/[0-9]/) === -1) {
+      errors.password = "Password must contain at least one number";
     }
 
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
-  };
-
-  const handleSubmit = () => {
-    if (isFormValid) {
-      console.log("Form submitted successfully!");
-    } else {
-      console.log("Form has errors. Please correct them.");
-    }
   };
 
   const router = useRouter();
@@ -73,7 +80,13 @@ const signEmailPass = () => {
           placeholder="Enter email here"
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7]"
         />
-        {errors.email && <p className="text-red-400">{errors.email}</p>}
+        {errors.email && (
+          <div className="flex gap-1 items-center">
+            {" "}
+            <XCircle className="text-red-400 w-5 h-5" />
+            <p className="text-red-400">{errors.email}</p>
+          </div>
+        )}
       </div>
       <div>
         <h5 className="text-sm font-medium text-[#09090b]">Password</h5>
@@ -86,7 +99,13 @@ const signEmailPass = () => {
           placeholder="Enter password here"
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7]"
         />
-        {errors.password && <p className="text-red-400">{errors.password}</p>}
+        {errors.password && (
+          <div className="flex gap-1 items-center">
+            {" "}
+            <XCircle className="text-red-400 w-5 h-5" />
+            <p className="text-red-400">{errors.password}</p>
+          </div>
+        )}
       </div>
       <div>
         <Button
