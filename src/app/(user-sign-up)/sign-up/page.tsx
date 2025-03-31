@@ -60,8 +60,8 @@ function signUp() {
         <h5 className="text-sm font-medium text-[#09090b] ">Username</h5>
         <Input
           placeholder="Enter username here"
-          value={name}
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7] "
+          value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
