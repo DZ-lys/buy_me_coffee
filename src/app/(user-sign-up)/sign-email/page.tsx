@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserType } from "@/utils/type";
+import { UserType } from "@/utils/types/type";
 import { XCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const signEmailPass = () => {
@@ -15,16 +15,42 @@ const signEmailPass = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [data, setData] = useState<UserType[] | null>(null);
 
-  useEffect(() => {
-    fetch("api/sign-up")
-      .then((data) => data.json())
-      .then((json) => setData(json.data));
-  }, []);
-  console.log(data);
+  const getUsers = async () => {
+    const response = await fetch("/api/user");
+    const data = await response.json();
+    setData(data.users);
+  };
 
-  useEffect(() => {
-    validateForm();
-  }, [email, password]);
+  const searchedName = useSearchParams();
+  const name = searchedName.get("name");
+
+  const username = name;
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, username: username }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmail("");
+        setPassword("");
+        return true;
+      } else {
+        alert("Error: " + data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return false;
+    }
+  };
 
   const validateForm = () => {
     let errors: { email?: string; password?: string } = {};
@@ -50,6 +76,11 @@ const signEmailPass = () => {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  useEffect(() => {
+    validateForm();
+    getUsers();
+  }, [email, password]);
+
   const router = useRouter();
   return (
     <div className="flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">
@@ -63,7 +94,7 @@ const signEmailPass = () => {
       </div>
       <div className="w-[22.7rem] h-10 flex flex-col justify-start">
         <h2 className="font-semibold text-2xl text-[#09090b] ">
-          Welcome, (placeholder)
+          Welcome, {name}
         </h2>
         <p className="text-sm font-normal text-[#71717a] ">
           Connect email and set a password
@@ -109,7 +140,11 @@ const signEmailPass = () => {
       </div>
       <div>
         <Button
-          onClick={() => router.push("/create-profile")}
+          onClick={async () => {
+            await handleSubmit();
+            router.push("/create-profile");
+          }}
+          type="submit"
           disabled={!isFormValid}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b]"
         >

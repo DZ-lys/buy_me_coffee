@@ -1,4 +1,4 @@
-import { UserType } from "@/utils/type";
+import { UserType } from "@/utils/types/type";
 
 export const getUser = async (): Promise<UserType[]> => {
   return [
