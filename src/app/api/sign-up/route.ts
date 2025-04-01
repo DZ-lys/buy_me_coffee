@@ -1,4 +1,4 @@
-import { getUser } from "@/back_end/user";
+import { getUser } from "@/utils/back_end/user";
 
 export async function GET() {
   const user = await getUser();

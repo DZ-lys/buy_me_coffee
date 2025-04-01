@@ -1,4 +1,3 @@
-import { MongoClient } from "mongodb";
 import { UserType } from "@/utils/type";
 
 export const getUser = async (): Promise<UserType[]> => {
