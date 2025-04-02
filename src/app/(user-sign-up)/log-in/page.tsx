@@ -15,15 +15,15 @@ const Log_In = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const [data, setData] = useState<UserType[] | null>(null);
 
-  useEffect(() => {
-    fetch("api/sign-up")
-      .then((data) => data.json())
-      .then((json) => setData(json.data));
-  }, []);
-  console.log(data);
+  const getUsers = async () => {
+    const response = await fetch("/api/user");
+    const data = await response.json();
+    setData(data.users);
+  };
 
   useEffect(() => {
     validateForm();
+    getUsers();
   }, [email, password]);
 
   const validateForm = () => {
