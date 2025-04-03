@@ -10,29 +10,30 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 
 const createProfile = () => {
-  const [displayName, setDisplayName] = useState("");
+  const [name, setName] = useState("");
   const [about, setAbout] = useState("");
-  const [url, setUrl] = useState("");
-  const [errors, setErrors] = useState<{
-    displayName?: string;
-    about?: string;
-    url?: string;
-    photoPreview?: string;
-  }>({});
+  const [social_media_url, setSocial_media_url] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File>();
-  const [image, setImage] = useState(null);
+  const [avatar_image, setAvatar_image] = useState("");
+
+  const [errors, setErrors] = useState<{
+    name?: string;
+    about?: string;
+    social_media_url?: string;
+    photoPreview?: string;
+  }>({});
 
   const PRESET_NAME = "buy_me_coffee";
   const CLOUDINARY_NAME = "da889nybx";
 
   useEffect(() => {
     validateForm();
-  }, [displayName, about, url, photoPreview]);
+  }, [name, about, social_media_url, photoPreview]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+    const file = e.target.files?.[0];
     if (file) {
       setFile(file);
       const reader = new FileReader();
@@ -48,45 +49,73 @@ const createProfile = () => {
     if (!file) {
       return;
     }
-    formData.append("photo", file);
+    formData.append("file", file);
     formData.append("upload_preset", PRESET_NAME);
     formData.append("api_key", CLOUDINARY_NAME);
 
     try {
       const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`,
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
         {
           method: "POST",
           body: formData,
         }
       );
       const data = await res.json();
-      setImage(data.secure_url);
+      setAvatar_image(data.secure_url);
     } catch (error) {
       console.error(error);
       alert("failed to upload");
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, about, avatar_image, social_media_url }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setName("");
+        setAbout("");
+        setAvatar_image("");
+        setSocial_media_url("");
+        return true;
+      } else {
+        alert("Error: " + data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return false;
+    }
+  };
+
   const validateForm = () => {
     let errors: {
-      displayName?: string;
+      name?: string;
       about?: string;
-      url?: string;
+      social_media_url?: string;
       photoPreview?: string;
     } = {};
 
     if (!photoPreview) {
       errors.photoPreview = "Please enter image";
     }
-    if (!displayName) {
-      errors.displayName = "Please enter name";
+    if (!name) {
+      errors.name = "Please enter name";
     }
     if (!about) {
       errors.about = "Please enter info about yourself";
     }
-    if (!url) {
-      errors.url = "Please enter a social link";
+    if (!social_media_url) {
+      errors.social_media_url = "Please enter a social link";
     }
 
     setErrors(errors);
@@ -122,7 +151,7 @@ const createProfile = () => {
                   )}
                 </div>
               </label>
-              <input
+              <Input
                 id="photo-upload"
                 type="file"
                 accept="image/*"
@@ -142,18 +171,18 @@ const createProfile = () => {
         <div className="flex flex-col gap-3 mt-16">
           <Label>Name</Label>
           <Input
-            value={displayName}
+            value={name}
             onChange={(e) => {
-              setDisplayName(e.target.value);
+              setName(e.target.value);
             }}
             placeholder="Enter your name here"
             className="py-2 px-3  "
           />
-          {errors.displayName && (
+          {errors.name && (
             <div className="flex gap-1 items-center">
               {" "}
               <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400">{errors.displayName}</p>
+              <p className="text-red-400">{errors.name}</p>
             </div>
           )}
         </div>
@@ -179,17 +208,17 @@ const createProfile = () => {
         <div className="flex flex-col gap-3">
           <Label>Social media URL</Label>
           <Input
-            value={url}
+            value={social_media_url}
             onChange={(e) => {
-              setUrl(e.target.value);
+              setSocial_media_url(e.target.value);
             }}
             placeholder="https://"
           />
-          {errors.url && (
+          {errors.social_media_url && (
             <div className="flex gap-1 items-center">
               {" "}
               <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400">{errors.url}</p>
+              <p className="text-red-400">{errors.social_media_url}</p>
             </div>
           )}
         </div>
@@ -198,7 +227,11 @@ const createProfile = () => {
             disabled={!isFormValid}
             onClick={async () => {
               await handleUpload();
-              route.push("/payment-details");
+              if (!avatar_image) {
+                return;
+              }
+              const success = await handleSubmit();
+              if (success) route.push("/payment-details");
             }}
             type="submit"
             className="px-4 py-2 w-[15rem] h-10 "

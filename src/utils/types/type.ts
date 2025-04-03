@@ -8,7 +8,6 @@ export type ProfileType = {
   id: number;
   name: string;
   about: string;
-  avatarImage: string;
-  socialMediaURL: string;
-  backgroundImage: string;
+  avatar_image: string;
+  social_media_url: string;
 };

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const getUser = `SELECT id, email, password, username FROM "public"."user" `;
+    const getUser = `SELECT id, email, password, username, "createdAt", "updatedAt" FROM "public"."user" `;
 
     const user = await runQuery(getUser);
     if (user.length <= 0) {
