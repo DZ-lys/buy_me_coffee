@@ -21,6 +21,11 @@ const createProfile = () => {
   }>({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File>();
+  const [image, setImage] = useState(null);
+
+  const PRESET_NAME = "buy_me_coffee";
+  const CLOUDINARY_NAME = "da889nybx";
 
   useEffect(() => {
     validateForm();
@@ -29,11 +34,37 @@ const createProfile = () => {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file) {
+      setFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    if (!file) {
+      return;
+    }
+    formData.append("photo", file);
+    formData.append("upload_preset", PRESET_NAME);
+    formData.append("api_key", CLOUDINARY_NAME);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+      setImage(data.secure_url);
+    } catch (error) {
+      console.error(error);
+      alert("failed to upload");
     }
   };
 
@@ -165,7 +196,11 @@ const createProfile = () => {
         <div className=" w-[31.875rem] h-10 flex justify-end ">
           <Button
             disabled={!isFormValid}
-            onClick={() => route.push("/payment-details")}
+            onClick={async () => {
+              await handleUpload();
+              route.push("/payment-details");
+            }}
+            type="submit"
             className="px-4 py-2 w-[15rem] h-10 "
           >
             Continue

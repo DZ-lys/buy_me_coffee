@@ -11,5 +11,4 @@ export type ProfileType = {
   avatarImage: string;
   socialMediaURL: string;
   backgroundImage: string;
-  successMessage: string;
 };
