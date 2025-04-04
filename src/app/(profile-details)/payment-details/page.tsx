@@ -13,8 +13,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
 
 const paymentDetails = () => {
+  const [country, setCountry] = useState("");
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
+  const [card_number, setCard_number] = useState("");
+  const [expiry_date, setExpiry_date] = useState("");
+  const [user_id, setUser_id] = useState(0);
+  const [errors, setErrors] = useState<{
+    country?: string;
+    first_name?: string;
+    last_name?: string;
+    card_number?: string;
+    expiry_date?: string;
+    user_id?: string;
+  }>({});
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const validateForm = () => {
+    let errors: {
+      country?: string;
+      first_name?: string;
+      last_name?: string;
+      card_number?: string;
+      expiry_date?: string;
+      user_id?: string;
+    } = {};
+
+    if (!country) {
+      errors.country = "Select country to continue";
+    }
+    if (!first_name) {
+      errors.first_name = "First name must match";
+    }
+    if (!last_name) {
+      errors.last_name = "Last name must match";
+    }
+    if (!card_number) {
+      errors.card_number = "invalid card number";
+    }
+    if (!expiry_date) {
+      errors.expiry_date = "invalid date";
+    }
+    if (!user_id) {
+      errors.user_id = "invalid CVC";
+    }
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+
+  useEffect(() => {
+    validateForm();
+  }, [country, first_name, last_name, card_number, expiry_date, user_id]);
+
   const route = useRouter();
 
   return (

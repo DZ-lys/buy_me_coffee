@@ -62,7 +62,8 @@ const createProfile = () => {
         }
       );
       const data = await res.json();
-      setAvatar_image(data.secure_url);
+
+      return data.secure_url;
     } catch (error) {
       console.error(error);
       alert("failed to upload");
@@ -71,12 +72,18 @@ const createProfile = () => {
 
   const handleSubmit = async () => {
     try {
+      const imgURL = await handleUpload();
       const response = await fetch("/api/profile", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, about, avatar_image, social_media_url }),
+        body: JSON.stringify({
+          name,
+          about,
+          avatar_image: imgURL,
+          social_media_url,
+        }),
       });
 
       const data = await response.json();
@@ -123,6 +130,11 @@ const createProfile = () => {
   };
 
   const route = useRouter();
+
+  const onSubmit = async () => {
+    const success = await handleSubmit();
+    if (success) route.push("/payment-details");
+  };
 
   return (
     <div className="flex flex-col justify-center items-center w-[100vw] h-[100vh] ">
@@ -225,15 +237,7 @@ const createProfile = () => {
         <div className=" w-[31.875rem] h-10 flex justify-end ">
           <Button
             disabled={!isFormValid}
-            onClick={async () => {
-              await handleUpload();
-              if (!avatar_image) {
-                return;
-              }
-              const success = await handleSubmit();
-              if (success) route.push("/payment-details");
-            }}
-            type="submit"
+            onClick={onSubmit}
             className="px-4 py-2 w-[15rem] h-10 "
           >
             Continue
