@@ -1,4 +1,5 @@
 "use client";
+import ErrorText from "@/app/_components/ErrorText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserType } from "@/utils/types/type";
@@ -66,13 +67,7 @@ function signUp() {
             setName(e.target.value);
           }}
         />
-        {errors.name && (
-          <div className="flex gap-1 items-center">
-            {" "}
-            <XCircle className="text-red-400 w-5 h-5" />
-            <p className="text-red-400">{errors.name}</p>
-          </div>
-        )}
+        <ErrorText message={errors.name} />
       </div>
       <div>
         <Button

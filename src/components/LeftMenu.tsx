@@ -23,7 +23,10 @@ export const LeftMenu = () => {
           Explore
         </button>
       </div>
-      <div className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] flex items-center gap-4 ">
+      <div
+        onClick={() => route.push("/view-page")}
+        className="w-full h-9 rounded-sm px-4 py-2 hover:cursor-pointer bg-[#f4f4f5] flex items-center gap-4 "
+      >
         <button className="font-medium text-sm hover:cursor-pointer">
           View page
         </button>

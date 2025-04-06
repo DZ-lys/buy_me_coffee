@@ -8,6 +8,7 @@ import { Label } from "@radix-ui/react-label";
 import { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
+import ErrorText from "@/app/_components/ErrorText";
 
 const createProfile = () => {
   const [name, setName] = useState("");
@@ -172,13 +173,7 @@ const createProfile = () => {
               />
             </div>
           </div>
-          {errors.photoPreview && (
-            <div className="flex gap-1 items-center">
-              {" "}
-              <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400 w-52">{errors.photoPreview}</p>
-            </div>
-          )}
+          <ErrorText message={errors.photoPreview} />
         </div>
         <div className="flex flex-col gap-3 mt-16">
           <Label>Name</Label>
@@ -190,13 +185,7 @@ const createProfile = () => {
             placeholder="Enter your name here"
             className="py-2 px-3  "
           />
-          {errors.name && (
-            <div className="flex gap-1 items-center">
-              {" "}
-              <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400">{errors.name}</p>
-            </div>
-          )}
+          <ErrorText message={errors.name} />
         </div>
         <div className="flex flex-col gap-3">
           <Label>About</Label>
@@ -209,13 +198,7 @@ const createProfile = () => {
             className="px-3 py-2 h-32 relative "
           />
 
-          {errors.about && (
-            <div className="flex gap-1 items-center">
-              {" "}
-              <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400">{errors.about}</p>
-            </div>
-          )}
+          <ErrorText message={errors.about} />
         </div>
         <div className="flex flex-col gap-3">
           <Label>Social media URL</Label>
@@ -226,13 +209,7 @@ const createProfile = () => {
             }}
             placeholder="https://"
           />
-          {errors.social_media_url && (
-            <div className="flex gap-1 items-center">
-              {" "}
-              <XCircle className="text-red-400 w-5 h-5" />
-              <p className="text-red-400">{errors.social_media_url}</p>
-            </div>
-          )}
+          <ErrorText message={errors.social_media_url} />
         </div>
         <div className=" w-[31.875rem] h-10 flex justify-end ">
           <Button

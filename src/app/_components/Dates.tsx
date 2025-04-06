@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 
 export const Months = () => {
   const months = [
@@ -70,34 +71,6 @@ export const Years = () => {
     {
       year: 2030,
       val: "2030",
-    },
-    {
-      year: 2031,
-      val: "2031",
-    },
-    {
-      year: 2032,
-      val: "2032",
-    },
-    {
-      year: 2033,
-      val: "2033",
-    },
-    {
-      year: 2034,
-      val: "2034",
-    },
-    {
-      year: 2035,
-      val: "2035",
-    },
-    {
-      year: 2036,
-      val: "2036",
-    },
-    {
-      year: 2037,
-      val: "2037",
     },
   ];
   return (

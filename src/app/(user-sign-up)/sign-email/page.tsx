@@ -1,4 +1,5 @@
 "use client";
+import ErrorText from "@/app/_components/ErrorText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserType } from "@/utils/types/type";
@@ -111,13 +112,7 @@ const signEmailPass = () => {
           placeholder="Enter email here"
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7]"
         />
-        {errors.email && (
-          <div className="flex gap-1 items-center">
-            {" "}
-            <XCircle className="text-red-400 w-5 h-5" />
-            <p className="text-red-400">{errors.email}</p>
-          </div>
-        )}
+        <ErrorText message={errors.email} />
       </div>
       <div>
         <h5 className="text-sm font-medium text-[#09090b]">Password</h5>
@@ -130,19 +125,13 @@ const signEmailPass = () => {
           placeholder="Enter password here"
           className="w-[22.7rem] h-10 rounded-md border py-2 px-3 border-[#e4e4e7]"
         />
-        {errors.password && (
-          <div className="flex gap-1 items-center">
-            {" "}
-            <XCircle className="text-red-400 w-5 h-5" />
-            <p className="text-red-400">{errors.password}</p>
-          </div>
-        )}
+        <ErrorText message={errors.password} />
       </div>
       <div>
         <Button
           onClick={async () => {
             await handleSubmit();
-            router.push("/create-profile");
+            router.push("/log-in");
           }}
           type="submit"
           disabled={!isFormValid}
