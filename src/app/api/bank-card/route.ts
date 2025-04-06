@@ -53,7 +53,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     console.log("Incoming request:", req.method);
 
     const createPaymentDetails = `
-      INSERT INTO "profile" (country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id)
+      INSERT INTO "bank_card" (country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
     `;
@@ -73,12 +73,9 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     return NextResponse.json({ paymentDetail: newDetail });
   } catch (err) {
-    console.error("Failed to create new profile:", err);
-    return new NextResponse(
-      JSON.stringify({ error: "Failed to create new profile" }),
-      {
-        status: 500,
-      }
-    );
+    console.error("Failed to run query:", err);
+    return new NextResponse(JSON.stringify({ error: "Failed to run query" }), {
+      status: 500,
+    });
   }
 }

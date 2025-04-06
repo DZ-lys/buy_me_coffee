@@ -81,6 +81,31 @@ const paymentDetails = () => {
     setIsFormValid(Object.keys(errors).length === 0);
   };
 
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/bank_card", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          country,
+          first_name,
+          last_name,
+          card_number,
+          expiry_date,
+          user_id,
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return false;
+    }
+  };
+
   useEffect(() => {
     validateForm();
   }, [country, first_name, last_name, card_number, expiry_date, user_id]);
@@ -102,6 +127,11 @@ const paymentDetails = () => {
     } else {
       return value;
     }
+  };
+
+  const onSubmit = async () => {
+    const success = await handleSubmit();
+    if (success) route.push("/");
   };
 
   return (
@@ -241,7 +271,7 @@ const paymentDetails = () => {
         </div>
         <div className="w-[31.875rem] h-10 flex justify-end mt-6 ">
           <Button
-            onClick={() => route.push("/")}
+            onClick={onSubmit}
             disabled={!isFormValid}
             className="px-4 py-2 w-[15rem] h-10 "
           >
