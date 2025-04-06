@@ -58,13 +58,23 @@ const paymentDetails = () => {
     if (!last_name) {
       errors.last_name = "Last name must match";
     }
-    if (!card_number) {
+    if (
+      !card_number ||
+      !card_number.search(/[a-z]/) ||
+      !card_number.search(/[A-Z]/) ||
+      card_number.length < 19
+    ) {
       errors.card_number = "invalid card number";
     }
     if (!expiry_date.month || !expiry_date.year) {
       errors.expiry_date = "Invalid expiry date";
     }
-    if (!user_id) {
+    if (
+      !user_id ||
+      !user_id.search(/[a-z]/) ||
+      !user_id.search(/[A-Z]/) ||
+      user_id.length < 3
+    ) {
       errors.user_id = "invalid CVC";
     }
     setErrors(errors);

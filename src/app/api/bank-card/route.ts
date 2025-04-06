@@ -1,19 +1,19 @@
 import { runQuery } from "@/utils/back_end/qeuryService";
+import { Bank_Card } from "@/utils/types/type";
 import { NextResponse } from "next/server";
-import { ProfileType } from "@/utils/types/type";
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const getProfile = `SELECT name, about, avatar_image, social_media_url, "createdAt", "updatedAt" FROM "profile" `;
+    const getPaymentDetails = `SELECT country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id FROM "bank_card" `;
 
-    const profile = await runQuery(getProfile);
-    if (profile.length <= 0) {
+    const detail = await runQuery(getPaymentDetails);
+    if (detail.length <= 0) {
       return new NextResponse(JSON.stringify({ error: "user not found" }), {
         status: 404,
       });
     }
 
-    return new NextResponse(JSON.stringify({ profileInfo: profile }));
+    return new NextResponse(JSON.stringify({ paymentDetail: detail }));
   } catch (err) {
     console.error("Failed to run query:", err);
     return new NextResponse(JSON.stringify({ error: "Failed to run query" }), {
@@ -24,12 +24,26 @@ export async function GET(): Promise<NextResponse> {
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    const { name, about, avatar_image, social_media_url } = await req.json();
+    const {
+      country,
+      first_name,
+      last_name,
+      card_number,
+      expiry_date,
+      user_id,
+    } = await req.json();
 
     const createdAt = new Date();
     const updatedAt = new Date();
 
-    if (!name || !about || !avatar_image || !social_media_url) {
+    if (
+      !country ||
+      !first_name ||
+      !last_name ||
+      !card_number ||
+      !expiry_date ||
+      !user_id
+    ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -38,24 +52,26 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     console.log("Incoming request:", req.method);
 
-    const createProfile = `
-      INSERT INTO "profile" (name, about, avatar_image, social_media_url, "createdAt", "updatedAt")
-      VALUES ($1, $2, $3, $4, $5, $6)
+    const createPaymentDetails = `
+      INSERT INTO "profile" (country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
     `;
 
     const values = [
-      name,
-      about,
-      avatar_image,
-      social_media_url,
+      country,
+      first_name,
+      last_name,
+      card_number,
+      expiry_date,
       createdAt,
       updatedAt,
+      user_id,
     ];
 
-    const newProfile = await runQuery<ProfileType[]>(createProfile, values);
+    const newDetail = await runQuery<Bank_Card[]>(createPaymentDetails, values);
 
-    return NextResponse.json({ profile: newProfile });
+    return NextResponse.json({ paymentDetail: newDetail });
   } catch (err) {
     console.error("Failed to create new profile:", err);
     return new NextResponse(
