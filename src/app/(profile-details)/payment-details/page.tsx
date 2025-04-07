@@ -99,7 +99,19 @@ const paymentDetails = () => {
       });
 
       const data = await response.json();
-      console.log(data);
+
+      if (response.ok) {
+        setCountry(""),
+          setFirst_name(""),
+          setLast_name(""),
+          setCard_number(""),
+          setExpiry_date({}),
+          setUser_id("");
+        return true;
+      } else {
+        alert("Error: " + data.error);
+        return false;
+      }
     } catch (error) {
       console.error("Fetch error:", error);
       return false;
