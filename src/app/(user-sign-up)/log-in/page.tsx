@@ -96,7 +96,7 @@ const Log_In = () => {
         <Button
           disabled={!isFormValid}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b] "
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/create-profile")}
         >
           continue
         </Button>

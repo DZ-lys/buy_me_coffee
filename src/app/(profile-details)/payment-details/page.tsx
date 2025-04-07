@@ -83,7 +83,7 @@ const paymentDetails = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("/api/bank_card", {
+      const response = await fetch("/api/bank-card", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
