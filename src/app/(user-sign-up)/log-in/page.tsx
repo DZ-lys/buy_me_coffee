@@ -12,35 +12,44 @@ const Log_In = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [data, setData] = useState<UserType[] | null>(null);
 
-  const getUsers = async () => {
-    const response = await fetch("/api/user");
-    const data = await response.json();
-    setData(data.users);
-  };
+  const handleSubmit = async (data: UserType): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/log-in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-  useEffect(() => {
-    validateForm();
-    getUsers();
-  }, [email, password]);
+      const result = await response.json();
 
-  const validateForm = () => {
-    let errors: { email?: string; password?: string } = {};
+      if (!response.ok) {
+        setErrors({
+          email: result.error?.includes("exist") ? result.error : undefined,
+          password: result.error?.includes("password")
+            ? result.error
+            : undefined,
+        });
+        return false;
+      }
 
-    if (data && !data.some((user) => user.email === email)) {
-      errors.email = "Email doesn't exist";
+      console.log("User logged in:", result.user);
+      return true;
+    } catch (err) {
+      console.log("Unexpected error:", err);
+      return false;
     }
-    if (data && !data.some((user) => user.password === password)) {
-      errors.password = "password isn't correct";
-    }
-
-    setErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
   };
 
   const router = useRouter();
+
+  const onSubmit = async () => {
+    const success = await handleSubmit({ email, password } as UserType);
+    if (success) router.push("/create-profile");
+  };
+
   return (
     <div className="relative flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">
       <div className="flex absolute top-8 right-20">
@@ -94,9 +103,9 @@ const Log_In = () => {
       </div>
       <div>
         <Button
-          disabled={!isFormValid}
+          disabled={!email || !password}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b] "
-          onClick={() => router.push("/create-profile")}
+          onClick={onSubmit}
         >
           continue
         </Button>

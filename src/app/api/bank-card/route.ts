@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const getPaymentDetails = `SELECT country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id FROM "bank_card" `;
+    const getPaymentDetails = `SELECT country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", cvc FROM "bank_card" `;
 
     const detail = await runQuery(getPaymentDetails);
     if (detail.length <= 0) {
@@ -30,7 +30,8 @@ export async function POST(req: Request): Promise<NextResponse> {
       last_name,
       card_number,
       expiry_date,
-      user_id,
+      cvc,
+      userId,
     } = await req.json();
 
     const createdAt = new Date();
@@ -42,7 +43,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       !last_name ||
       !card_number ||
       !expiry_date ||
-      !user_id
+      !cvc
     ) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -53,7 +54,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     console.log("Incoming request:", req.method);
 
     const createPaymentDetails = `
-      INSERT INTO "bank_card" (country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", user_id)
+      INSERT INTO "bank_card" (country, first_name, last_name, card_number, expiry_date, "createdAt", "updatedAt", cvc)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *;
     `;
@@ -66,12 +67,20 @@ export async function POST(req: Request): Promise<NextResponse> {
       expiry_date,
       createdAt,
       updatedAt,
-      user_id,
+      cvc,
     ];
 
-    const newDetail = await runQuery<Bank_Card[]>(createPaymentDetails, values);
+    const newCard = await runQuery<Bank_Card>(createPaymentDetails, values);
 
-    return NextResponse.json({ paymentDetail: newDetail });
+    const newCardId = newCard[0].id;
+
+    const cardId = await runQuery(
+      `UPDATE "user" SET bank_card_id = $1 WHERE id = $2`,
+      [newCardId, userId]
+    );
+    console.log("user id:", userId);
+
+    return NextResponse.json({ paymentDetail: cardId });
   } catch (err) {
     console.error("Failed to run query:", err);
     return new NextResponse(JSON.stringify({ error: "Failed to run query" }), {

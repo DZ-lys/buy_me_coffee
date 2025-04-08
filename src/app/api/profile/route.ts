@@ -24,7 +24,8 @@ export async function GET(): Promise<NextResponse> {
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    const { name, about, avatar_image, social_media_url } = await req.json();
+    const { name, about, avatar_image, social_media_url, userId } =
+      await req.json();
 
     const createdAt = new Date();
     const updatedAt = new Date();
@@ -53,9 +54,17 @@ export async function POST(req: Request): Promise<NextResponse> {
       updatedAt,
     ];
 
-    const newProfile = await runQuery<ProfileType[]>(createProfile, values);
+    const newProfile = await runQuery<ProfileType>(createProfile, values);
 
-    return NextResponse.json({ profile: newProfile });
+    const newProfileId = newProfile[0].id;
+
+    const profileId = await runQuery(
+      `UPDATE "user" SET profile_id = $1 WHERE id = $2`,
+      [newProfileId, userId]
+    );
+    console.log("user id:", userId);
+
+    return NextResponse.json({ profile: profileId });
   } catch (err) {
     console.error("Failed to create new profile:", err);
     return new NextResponse(
