@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { ProfileProvider } from "../_context/CreateProfile";
 import { CardProvider } from "../_context/PaymentDetails";
+import { LogInProvider } from "../_context/UserLogIn";
 
 type Props = {
   children: ReactNode;
@@ -8,9 +9,11 @@ type Props = {
 
 const ProfileLayout = (props: Props) => {
   return (
-    <ProfileProvider>
-      <CardProvider>{props.children}</CardProvider>
-    </ProfileProvider>
+    <LogInProvider>
+      <ProfileProvider>
+        <CardProvider>{props.children}</CardProvider>
+      </ProfileProvider>
+    </LogInProvider>
   );
 };
 

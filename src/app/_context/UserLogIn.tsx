@@ -9,8 +9,8 @@ interface UserContextType {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   errors: { email?: string; password?: string };
   handleSubmit: (data: UserType) => Promise<UserType | false>;
-  user: string;
-  setUser: React.Dispatch<React.SetStateAction<string>>;
+  user: UserType | null;
+  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -20,7 +20,7 @@ export const UserContext = createContext<UserContextType | undefined>(
 export const useLogIn = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error("useRegisterName must be used within a UserProvider");
+    throw new Error("useLogIn must be used within a UserProvider");
   }
   return context;
 };
@@ -31,7 +31,7 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState<UserType | null>(null);
 
   const handleSubmit = async (data: UserType): Promise<UserType | false> => {
     try {
@@ -55,22 +55,9 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
         return false;
       }
 
-      const userId = result.user;
+      setUser(result.user);
 
-      setUser(userId);
-
-      const sendUserId = await fetch("/api/log-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: userId.id }),
-      });
-
-      const userResult = await sendUserId.json();
-      console.log("Follow-up result:", userResult);
-
-      return userId;
+      return result.user;
     } catch (err) {
       console.log("Unexpected error:", err);
       return false;

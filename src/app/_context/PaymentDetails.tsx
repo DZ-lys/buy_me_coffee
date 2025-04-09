@@ -41,7 +41,7 @@ export const UserContext = createContext<UserContextType | undefined>(
 export const usePaymentDetails = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useRegisterEmail must be used within a UserProvider");
+    throw new Error("usePaymentDetails must be used within a UserProvider");
   }
   return context;
 };

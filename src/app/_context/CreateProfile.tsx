@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useLogIn } from "./UserLogIn";
 
 interface UserContextType {
   name: string;
@@ -35,7 +36,7 @@ export const UserContext = createContext<UserContextType | undefined>(
 export const useCreateProfile = () => {
   const context = useContext(UserContext);
   if (!context) {
-    throw new Error("useRegisterEmail must be used within a UserProvider");
+    throw new Error("useCreateProfile must be used within a UserProvider");
   }
   return context;
 };
@@ -48,6 +49,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File>();
   const [avatar_image, setAvatar_image] = useState("");
+  const { user } = useLogIn();
 
   const [errors, setErrors] = useState<{
     name?: string;
@@ -114,6 +116,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
           about,
           avatar_image: imgURL,
           social_media_url,
+          userId: user?.id,
         }),
       });
 

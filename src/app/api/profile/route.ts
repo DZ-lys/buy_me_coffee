@@ -54,6 +54,8 @@ export async function POST(req: Request): Promise<NextResponse> {
       updatedAt,
     ];
 
+    console.log("user id:", userId);
+
     const newProfile = await runQuery<ProfileType>(createProfile, values);
 
     const newProfileId = newProfile[0].id;
@@ -62,7 +64,6 @@ export async function POST(req: Request): Promise<NextResponse> {
       `UPDATE "user" SET "profile_id" = $1 WHERE "id" = $2`,
       [newProfileId, userId]
     );
-    console.log("user id:", userId);
 
     return NextResponse.json({ profile: profileId });
   } catch (err) {
