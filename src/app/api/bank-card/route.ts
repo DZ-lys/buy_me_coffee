@@ -75,7 +75,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     const newCardId = newCard[0].id;
 
     const cardId = await runQuery(
-      `UPDATE "user" SET bank_card_id = $1 WHERE id = $2`,
+      `UPDATE "user" SET "bank_card_id" = $1 WHERE "id" = $2`,
       [newCardId, userId]
     );
     console.log("user id:", userId);

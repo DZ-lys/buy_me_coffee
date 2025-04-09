@@ -28,14 +28,14 @@ const paymentDetails = () => {
     month?: string;
     year?: string;
   }>({});
-  const [user_id, setUser_id] = useState("");
+  const [cvc, setCVC] = useState("");
   const [errors, setErrors] = useState<{
     country?: string;
     first_name?: string;
     last_name?: string;
     card_number?: string;
     expiry_date?: string;
-    user_id?: string;
+    cvc?: string;
   }>({});
   const [isFormValid, setIsFormValid] = useState(false);
 
@@ -46,7 +46,7 @@ const paymentDetails = () => {
       last_name?: string;
       card_number?: string;
       expiry_date?: string;
-      user_id?: string;
+      cvc?: string;
     } = {};
 
     if (!country) {
@@ -70,12 +70,12 @@ const paymentDetails = () => {
       errors.expiry_date = "Invalid expiry date";
     }
     if (
-      !user_id ||
-      !user_id.search(/[a-z]/) ||
-      !user_id.search(/[A-Z]/) ||
-      user_id.length < 3
+      !cvc ||
+      !cvc.search(/[a-z]/) ||
+      !cvc.search(/[A-Z]/) ||
+      cvc.length < 3
     ) {
-      errors.user_id = "invalid CVC";
+      errors.cvc = "invalid CVC";
     }
     setErrors(errors);
     setIsFormValid(Object.keys(errors).length === 0);
@@ -94,7 +94,7 @@ const paymentDetails = () => {
           last_name,
           card_number,
           expiry_date,
-          user_id,
+          cvc,
         }),
       });
 
@@ -106,7 +106,7 @@ const paymentDetails = () => {
           setLast_name(""),
           setCard_number(""),
           setExpiry_date({}),
-          setUser_id("");
+          setCVC("");
         return true;
       } else {
         alert("Error: " + data.error);
@@ -120,7 +120,7 @@ const paymentDetails = () => {
 
   useEffect(() => {
     validateForm();
-  }, [country, first_name, last_name, card_number, expiry_date, user_id]);
+  }, [country, first_name, last_name, card_number, expiry_date, cvc]);
 
   const route = useRouter();
 
@@ -271,14 +271,14 @@ const paymentDetails = () => {
             <Label>CVC</Label>
             <Input
               maxLength={3}
-              value={user_id}
+              value={cvc}
               onChange={(e) => {
-                setUser_id(e.target.value);
+                setCVC(e.target.value);
               }}
               placeholder="CVC"
               className="w-40 h-9 px-3 py-2"
             />
-            <ErrorText message={errors.user_id} />
+            <ErrorText message={errors.cvc} />
           </div>
         </div>
         <div className="w-[31.875rem] h-10 flex justify-end mt-6 ">

@@ -3,7 +3,6 @@ import ErrorText from "@/app/_components/ErrorText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserType } from "@/utils/types/type";
-import { XCircle } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -83,6 +82,12 @@ const signEmailPass = () => {
   }, [email, password]);
 
   const router = useRouter();
+
+  const onSubmit = async () => {
+    const success = await handleSubmit();
+    if (success) router.push("/log-in");
+  };
+
   return (
     <div className="flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">
       <div className="flex absolute top-8 right-20">
@@ -129,10 +134,7 @@ const signEmailPass = () => {
       </div>
       <div>
         <Button
-          onClick={async () => {
-            await handleSubmit();
-            router.push("/log-in");
-          }}
+          onClick={onSubmit}
           type="submit"
           disabled={!isFormValid}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b]"

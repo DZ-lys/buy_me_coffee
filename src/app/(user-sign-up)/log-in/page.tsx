@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { UserType } from "@/utils/types/type";
 import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Log_In = () => {
   const [email, setEmail] = useState("");
@@ -12,8 +12,9 @@ const Log_In = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
+  const [user, setUser] = useState("");
 
-  const handleSubmit = async (data: UserType): Promise<boolean> => {
+  const handleSubmit = async (data: UserType): Promise<UserType | false> => {
     try {
       const response = await fetch(`/api/log-in`, {
         method: "POST",
@@ -35,20 +36,38 @@ const Log_In = () => {
         return false;
       }
 
-      console.log("User logged in:", result.user);
-      return true;
+      const userId = result.user;
+
+      setUser(userId);
+
+      const sendUserId = await fetch("/api/log-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: userId.id }),
+      });
+
+      const userResult = await sendUserId.json();
+      console.log("Follow-up result:", userResult);
+
+      return userId;
     } catch (err) {
       console.log("Unexpected error:", err);
       return false;
     }
   };
-
   const router = useRouter();
 
   const onSubmit = async () => {
-    const success = await handleSubmit({ email, password } as UserType);
-    if (success) router.push("/create-profile");
+    const user = await handleSubmit({ email, password } as UserType);
+    if (user) {
+      console.log("User details:", user);
+      router.push("/create-profile");
+    }
   };
+
+  console.log(user);
 
   return (
     <div className="relative flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">

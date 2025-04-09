@@ -59,7 +59,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     const newProfileId = newProfile[0].id;
 
     const profileId = await runQuery(
-      `UPDATE "user" SET profile_id = $1 WHERE id = $2`,
+      `UPDATE "user" SET "profile_id" = $1 WHERE "id" = $2`,
       [newProfileId, userId]
     );
     console.log("user id:", userId);

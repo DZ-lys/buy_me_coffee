@@ -6,6 +6,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   try {
     const body = await req.json();
     const { email, password } = body;
+    console.log(body);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -38,10 +39,13 @@ export async function POST(req: Request): Promise<NextResponse> {
     }
 
     const userDetail = await runQuery(
-      `SELECT * FROM "user"
-       LEFT JOIN "profile" ON "user"."profile_id" = "profile"."id"
-       LEFT JOIN "bank_card" ON "user"."bank_card_id" = "bank_card"."id"
-       WHERE "user"."id" = $1`,
+      `SELECT u.id as userId, u.email, u.password, u.username, 
+      p.id as profileId, p.name, p.about, p.avatar_image, p.social_media_url, 
+      b.id as bankCardId, b.country, b.first_name, b.last_name, b.card_number, b.expiry_date, b.cvc
+      FROM "user" as u
+      LEFT JOIN "profile" as p ON u."profile_id" = p."id" 
+      LEFT JOIN "bank_card" as b ON u."bank_card_id" = b."id"
+      WHERE u."id" = $1`,
       [foundUser.id]
     );
 
