@@ -12,115 +12,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
 import { months, years } from "@/constants/Dates";
 import ErrorText from "@/app/_components/ErrorText";
+import { usePaymentDetails } from "@/app/_context/PaymentDetails";
 
 months;
 years;
 
 const paymentDetails = () => {
-  const [country, setCountry] = useState("");
-  const [first_name, setFirst_name] = useState("");
-  const [last_name, setLast_name] = useState("");
-  const [card_number, setCard_number] = useState("");
-  const [expiry_date, setExpiry_date] = useState<{
-    month?: string;
-    year?: string;
-  }>({});
-  const [cvc, setCVC] = useState("");
-  const [errors, setErrors] = useState<{
-    country?: string;
-    first_name?: string;
-    last_name?: string;
-    card_number?: string;
-    expiry_date?: string;
-    cvc?: string;
-  }>({});
-  const [isFormValid, setIsFormValid] = useState(false);
-
-  const validateForm = () => {
-    let errors: {
-      country?: string;
-      first_name?: string;
-      last_name?: string;
-      card_number?: string;
-      expiry_date?: string;
-      cvc?: string;
-    } = {};
-
-    if (!country) {
-      errors.country = "Select country to continue";
-    }
-    if (!first_name) {
-      errors.first_name = "First name must match";
-    }
-    if (!last_name) {
-      errors.last_name = "Last name must match";
-    }
-    if (
-      !card_number ||
-      !card_number.search(/[a-z]/) ||
-      !card_number.search(/[A-Z]/) ||
-      card_number.length < 19
-    ) {
-      errors.card_number = "invalid card number";
-    }
-    if (!expiry_date.month || !expiry_date.year) {
-      errors.expiry_date = "Invalid expiry date";
-    }
-    if (
-      !cvc ||
-      !cvc.search(/[a-z]/) ||
-      !cvc.search(/[A-Z]/) ||
-      cvc.length < 3
-    ) {
-      errors.cvc = "invalid CVC";
-    }
-    setErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch("/api/bank-card", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          country,
-          first_name,
-          last_name,
-          card_number,
-          expiry_date,
-          cvc,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setCountry(""),
-          setFirst_name(""),
-          setLast_name(""),
-          setCard_number(""),
-          setExpiry_date({}),
-          setCVC("");
-        return true;
-      } else {
-        alert("Error: " + data.error);
-        return false;
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    validateForm();
-  }, [country, first_name, last_name, card_number, expiry_date, cvc]);
+  const {
+    country,
+    first_name,
+    last_name,
+    card_number,
+    expiry_date,
+    cvc,
+    errors,
+    isFormValid,
+    setCountry,
+    setFirst_name,
+    setLast_name,
+    setCard_number,
+    setExpiry_date,
+    setCVC,
+    handleSubmit,
+  } = usePaymentDetails();
 
   const route = useRouter();
 

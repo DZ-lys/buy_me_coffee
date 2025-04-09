@@ -1,42 +1,12 @@
 "use client";
 import ErrorText from "@/app/_components/ErrorText";
+import { useRegisterName } from "@/app/_context/UserName";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserType } from "@/utils/types/type";
-import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 function signUp() {
-  const [name, setName] = useState("");
-  const [errors, setErrors] = useState<{ name?: string }>({});
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [data, setData] = useState<UserType[] | null>(null);
-
-  const getUsers = async () => {
-    const response = await fetch("/api/user");
-    const data = await response.json();
-    setData(data.users);
-  };
-
-  const validateForm = () => {
-    let errors: { name?: string } = {};
-
-    if (!name) {
-      errors.name = "Username is required";
-    }
-    if (data && data.some((user) => user.username === name)) {
-      errors.name = "Username is already taken";
-    }
-
-    setErrors(errors);
-    setIsFormValid(Object.keys(errors).length === 0);
-  };
-
-  useEffect(() => {
-    validateForm();
-    getUsers();
-  }, [name]);
+  const { name, setName, errors, isFormValid } = useRegisterName();
 
   const router = useRouter();
   return (
@@ -72,9 +42,7 @@ function signUp() {
       <div>
         <Button
           disabled={!isFormValid}
-          onClick={() =>
-            router.push(`/sign-email?name=${encodeURIComponent(name)}`)
-          }
+          onClick={() => router.push("/reg-email")}
           className="w-[22.7rem] h-10 px-4 py-2 rounded-md bg-[#18181b] hover:cursor-pointer "
         >
           continue

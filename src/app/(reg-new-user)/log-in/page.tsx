@@ -1,63 +1,16 @@
 "use client";
+import { useLogIn } from "@/app/_context/UserLogIn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserType } from "@/utils/types/type";
 import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 const Log_In = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {}
-  );
-  const [user, setUser] = useState("");
-
-  const handleSubmit = async (data: UserType): Promise<UserType | false> => {
-    try {
-      const response = await fetch(`/api/log-in`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        setErrors({
-          email: result.error?.includes("exist") ? result.error : undefined,
-          password: result.error?.includes("password")
-            ? result.error
-            : undefined,
-        });
-        return false;
-      }
-
-      const userId = result.user;
-
-      setUser(userId);
-
-      const sendUserId = await fetch("/api/log-in", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: userId.id }),
-      });
-
-      const userResult = await sendUserId.json();
-      console.log("Follow-up result:", userResult);
-
-      return userId;
-    } catch (err) {
-      console.log("Unexpected error:", err);
-      return false;
-    }
-  };
   const router = useRouter();
+
+  const { email, setEmail, password, setPassword, errors, handleSubmit, user } =
+    useLogIn();
 
   const onSubmit = async () => {
     const user = await handleSubmit({ email, password } as UserType);
