@@ -24,7 +24,7 @@ export async function GET(): Promise<NextResponse> {
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    const { name, about, avatar_image, social_media_url, userId } =
+    const { name, about, avatar_image, social_media_url, userid } =
       await req.json();
 
     const createdAt = new Date();
@@ -54,7 +54,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       updatedAt,
     ];
 
-    console.log("user id:", userId);
+    console.log("user id:", userid);
 
     const newProfile = await runQuery<ProfileType>(createProfile, values);
 
@@ -62,7 +62,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     const profileId = await runQuery(
       `UPDATE "user" SET "profile_id" = $1 WHERE "id" = $2`,
-      [newProfileId, userId]
+      [newProfileId, userid]
     );
 
     return NextResponse.json({ profile: profileId });

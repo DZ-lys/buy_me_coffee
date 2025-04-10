@@ -29,8 +29,6 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     const foundUser = user[0];
 
-    console.log("found user:", foundUser);
-
     if (foundUser.password !== password) {
       return NextResponse.json(
         { error: "Incorrect password" },

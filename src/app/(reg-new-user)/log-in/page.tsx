@@ -2,7 +2,7 @@
 import { useLogIn } from "@/app/_context/UserLogIn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserType } from "@/utils/types/type";
+import { UserFullInfoType } from "@/utils/types/type";
 import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -13,14 +13,8 @@ const Log_In = () => {
     useLogIn();
 
   const onSubmit = async () => {
-    const user = await handleSubmit({ email, password } as UserType);
-    if (user) {
-      console.log("User details:", user);
-      router.push("/create-profile");
-    }
+    handleSubmit({ email, password } as UserFullInfoType);
   };
-
-  console.log(user);
 
   return (
     <div className="relative flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh]">

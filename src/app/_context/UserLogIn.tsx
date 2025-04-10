@@ -1,5 +1,6 @@
 "use client";
-import { UserType } from "@/utils/types/type";
+import { UserFullInfoType, UserType } from "@/utils/types/type";
+import { useRouter } from "next/navigation";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 interface UserContextType {
@@ -8,9 +9,8 @@ interface UserContextType {
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   errors: { email?: string; password?: string };
-  handleSubmit: (data: UserType) => Promise<UserType | false>;
-  user: UserType | null;
-  setUser: React.Dispatch<React.SetStateAction<UserType | null>>;
+  handleSubmit: (data: UserFullInfoType) => void;
+  user: UserFullInfoType | null;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -26,14 +26,16 @@ export const useLogIn = () => {
 };
 
 export const LogInProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {}
   );
-  const [user, setUser] = useState<UserType | null>(null);
 
-  const handleSubmit = async (data: UserType): Promise<UserType | false> => {
+  const [user, setUser] = useState<UserFullInfoType | null>(null);
+
+  const handleSubmit = async (data: UserFullInfoType) => {
     try {
       const response = await fetch(`/api/log-in`, {
         method: "POST",
@@ -54,15 +56,17 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
         });
         return false;
       }
-
       setUser(result.user);
 
+      console.log("USERIIN LOGIN RESULT", result.user);
+      router.push("/create-profile");
       return result.user;
     } catch (err) {
       console.log("Unexpected error:", err);
       return false;
     }
   };
+
   return (
     <UserContext.Provider
       value={{
@@ -73,7 +77,6 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
         errors,
         handleSubmit,
         user,
-        setUser,
       }}
     >
       {children}

@@ -20,3 +20,9 @@ export type Bank_Card = {
   card_number: string;
   expiry_date: string;
 };
+export type UserFullInfoType = {
+  userid: number;
+  username: string;
+  email: string;
+  password: string;
+};

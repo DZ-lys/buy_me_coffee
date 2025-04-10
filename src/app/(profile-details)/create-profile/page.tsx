@@ -8,29 +8,137 @@ import { Label } from "@radix-ui/react-label";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ErrorText from "@/app/_components/ErrorText";
-import { useCreateProfile } from "@/app/_context/CreateProfile";
+import { useEffect, useState } from "react";
+import { useLogIn } from "@/app/_context/UserLogIn";
 
-const createProfile = () => {
+const CreateProfile = () => {
   const route = useRouter();
 
-  const {
-    name,
-    about,
-    social_media_url,
-    errors,
-    isFormValid,
-    handleSubmit,
-    setName,
-    setAbout,
-    setSocial_media_url,
-    photoPreview,
-    handlePhotoChange,
-  } = useCreateProfile();
+  const [name, setName] = useState("");
+  const [about, setAbout] = useState("");
+  const [social_media_url, setSocial_media_url] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File>();
+  const [avatar_image, setAvatar_image] = useState("");
+  const { user } = useLogIn();
 
-  const onSubmit = async () => {
-    const success = await handleSubmit();
-    if (success) route.push("/payment-details");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    about?: string;
+    social_media_url?: string;
+    photoPreview?: string;
+  }>({});
+
+  const PRESET_NAME = "buy_me_coffee";
+  const CLOUDINARY_NAME = "da889nybx";
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    if (!file) {
+      return;
+    }
+    formData.append("file", file);
+    formData.append("upload_preset", PRESET_NAME);
+    formData.append("api_key", CLOUDINARY_NAME);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const data = await res.json();
+
+      return data.secure_url;
+    } catch (error) {
+      console.error(error);
+      alert("failed to upload");
+    }
+  };
+
+  const handleSubmit = async () => {
+    console.log("logged user", user);
+    try {
+      const imgURL = await handleUpload();
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          about,
+          avatar_image: imgURL,
+          social_media_url,
+          userId: user?.userid,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setName("");
+        setAbout("");
+        setAvatar_image("");
+        setSocial_media_url("");
+        return true;
+      } else {
+        alert("Error: " + data.error);
+        return false;
+      }
+    } catch (error) {
+      console.error("Fetch error:", error);
+      return false;
+    }
+  };
+
+  const validateForm = () => {
+    let errors: {
+      name?: string;
+      about?: string;
+      social_media_url?: string;
+      photoPreview?: string;
+    } = {};
+
+    if (!photoPreview) {
+      errors.photoPreview = "Please enter image";
+    }
+    if (!name) {
+      errors.name = "Please enter name";
+    }
+    if (!about) {
+      errors.about = "Please enter info about yourself";
+    }
+    if (!social_media_url) {
+      errors.social_media_url = "Please enter a social link";
+    }
+
+    setErrors(errors);
+    setIsFormValid(Object.keys(errors).length === 0);
+  };
+
+  useEffect(() => {
+    if (user) {
+      console.log("logged user:", user);
+      route.push("/payment-details");
+    }
+    validateForm();
+  }, [name, about, social_media_url, photoPreview, user]);
 
   return (
     <div className="flex flex-col justify-center items-center w-[100vw] h-[100vh] ">
@@ -109,7 +217,7 @@ const createProfile = () => {
         <div className=" w-[31.875rem] h-10 flex justify-end ">
           <Button
             disabled={!isFormValid}
-            onClick={onSubmit}
+            onClick={handleSubmit}
             className="px-4 py-2 w-[15rem] h-10 "
           >
             Continue
@@ -120,4 +228,4 @@ const createProfile = () => {
   );
 };
 
-export default createProfile;
+export default CreateProfile;
