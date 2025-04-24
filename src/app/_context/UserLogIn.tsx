@@ -56,6 +56,12 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
         });
         return false;
       }
+
+      if (result.user.userid) {
+        localStorage.setItem("userId", result.user.userid);
+        console.log("Saved userId to localStorage:", result.user.userId);
+      }
+
       setUser(result.user);
 
       console.log("USERIIN LOGIN RESULT", result.user);

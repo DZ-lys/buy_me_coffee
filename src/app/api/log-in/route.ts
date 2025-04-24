@@ -4,9 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request): Promise<NextResponse> {
   try {
-    const body = await req.json();
-    const { email, password } = body;
-    console.log(body);
+    const { email, password } = await req.json();
+
+    if (!email && !password) {
+      return new NextResponse(JSON.stringify({ message: "Error in login" }), {
+        status: 401,
+      });
+    }
 
     if (!email || !password) {
       return NextResponse.json(
@@ -41,7 +45,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       p.id as profileId, p.name, p.about, p.avatar_image, p.social_media_url, 
       b.id as bankCardId, b.country, b.first_name, b.last_name, b.card_number, b.expiry_date, b.cvc
       FROM "user" as u
-      LEFT JOIN "profile" as p ON u."profile_id" = p."id" 
+      LEFT JOIN "profile" as p ON u."profile_id" = p."id"
       LEFT JOIN "bank_card" as b ON u."bank_card_id" = b."id"
       WHERE u."id" = $1`,
       [foundUser.id]
