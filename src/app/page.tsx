@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { UserType } from "@/utils/types/type";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "./_components/Header";

@@ -85,7 +85,7 @@ const CreateProfile = () => {
           about,
           avatar_image: imgURL,
           social_media_url,
-          userId: user?.userid,
+          userId: user?.profile.id,
         }),
       });
 

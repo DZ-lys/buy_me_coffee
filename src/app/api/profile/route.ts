@@ -1,6 +1,6 @@
 import { runQuery } from "@/utils/back_end/qeuryService";
 import { NextResponse } from "next/server";
-import { ProfileType } from "@/utils/types/type";
+import { Profile_Type } from "@/utils/types/type";
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -56,7 +56,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     console.log("user id:", userid);
 
-    const newProfile = await runQuery<ProfileType>(createProfile, values);
+    const newProfile = await runQuery<Profile_Type>(createProfile, values);
 
     const newProfileId = newProfile[0].id;
 

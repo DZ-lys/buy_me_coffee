@@ -1,5 +1,5 @@
 import { runQuery } from "@/utils/back_end/qeuryService";
-import { UserType } from "@/utils/types/type";
+import { User_Type } from "@/utils/types/type";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request): Promise<NextResponse> {
@@ -19,7 +19,7 @@ export async function POST(req: Request): Promise<NextResponse> {
       );
     }
 
-    const user = await runQuery<UserType>(
+    const user = await runQuery<User_Type>(
       `SELECT * FROM "user" WHERE email = $1`,
       [email]
     );

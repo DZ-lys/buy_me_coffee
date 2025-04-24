@@ -1,5 +1,5 @@
 import { runQuery } from "@/utils/back_end/qeuryService";
-import { Bank_Card } from "@/utils/types/type";
+import { Bank_Card_Type } from "@/utils/types/type";
 import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse> {
@@ -70,7 +70,10 @@ export async function POST(req: Request): Promise<NextResponse> {
       cvc,
     ];
 
-    const newCard = await runQuery<Bank_Card>(createPaymentDetails, values);
+    const newCard = await runQuery<Bank_Card_Type>(
+      createPaymentDetails,
+      values
+    );
 
     const newCardId = newCard[0].id;
 

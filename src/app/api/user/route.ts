@@ -1,5 +1,5 @@
 import { runQuery } from "@/utils/back_end/qeuryService";
-import { UserType } from "@/utils/types/type";
+import { User_Type } from "@/utils/types/type";
 import { NextResponse } from "next/server";
 
 export async function GET(): Promise<NextResponse> {
@@ -43,7 +43,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     `;
 
     const values = [email, password, username, createdAt, updatedAt];
-    const newUser = await runQuery<UserType[]>(createUserQuery, values);
+    const newUser = await runQuery<User_Type[]>(createUserQuery, values);
 
     return NextResponse.json({ user: newUser });
   } catch (err) {
