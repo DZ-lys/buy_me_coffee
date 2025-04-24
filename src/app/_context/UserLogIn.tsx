@@ -1,5 +1,5 @@
 "use client";
-import { UserFullInfoType, UserType } from "@/utils/types/type";
+import { User_Type } from "@/utils/types/type";
 import { useRouter } from "next/navigation";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
@@ -9,8 +9,8 @@ interface UserContextType {
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   errors: { email?: string; password?: string };
-  handleSubmit: (data: UserFullInfoType) => void;
-  user: UserFullInfoType | null;
+  handleSubmit: (data: User_Type) => void;
+  user: User_Type | null;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -33,9 +33,9 @@ export const LogInProvider = ({ children }: { children: ReactNode }) => {
     {}
   );
 
-  const [user, setUser] = useState<UserFullInfoType | null>(null);
+  const [user, setUser] = useState<User_Type | null>(null);
 
-  const handleSubmit = async (data: UserFullInfoType) => {
+  const handleSubmit = async (data: User_Type) => {
     try {
       const response = await fetch(`/api/log-in`, {
         method: "POST",

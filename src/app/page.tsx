@@ -4,7 +4,7 @@ import { UserType } from "@/utils/types/type";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "./_components/Header";
-import { LeftMenu } from "@/components/LeftMenu";
+import { LeftMenu } from "@/app/_components/LeftMenu";
 import { Label } from "@/components/ui/label";
 import { ArrowDown, Heart } from "lucide-react";
 import Image from "next/image";

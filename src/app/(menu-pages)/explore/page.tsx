@@ -1,5 +1,5 @@
 import { Header } from "@/app/_components/Header";
-import { LeftMenu } from "@/components/LeftMenu";
+import { LeftMenu } from "@/app/_components/LeftMenu";
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
 

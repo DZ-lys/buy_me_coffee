@@ -1,5 +1,5 @@
 import { Header } from "@/app/_components/Header";
-import { LeftMenu } from "@/components/LeftMenu";
+import { LeftMenu } from "@/app/_components/LeftMenu";
 
 const AccountSettings = () => {
   return (

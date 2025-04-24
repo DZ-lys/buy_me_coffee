@@ -1,5 +1,4 @@
 "use client";
-import { UserType } from "@/utils/types/type";
 import React, {
   createContext,
   ReactNode,
@@ -8,6 +7,7 @@ import React, {
   useState,
 } from "react";
 import { useRegisterName } from "./UserName";
+import { User_Type } from "@/utils/types/type";
 
 interface UserContextType {
   email: string;
@@ -39,7 +39,7 @@ export const EmailProvider = ({ children }: { children: ReactNode }) => {
     {}
   );
   const [isFormValid, setIsFormValid] = useState(false);
-  const [data, setData] = useState<UserType[] | null>(null);
+  const [data, setData] = useState<User_Type[] | null>(null);
 
   const username = name;
 

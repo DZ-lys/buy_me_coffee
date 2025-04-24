@@ -1,5 +1,5 @@
 "use client";
-import { UserType } from "@/utils/types/type";
+import { User_Type } from "@/utils/types/type";
 import React, {
   createContext,
   ReactNode,
@@ -13,10 +13,10 @@ interface UserContextType {
   setName: React.Dispatch<React.SetStateAction<string>>;
   errors: { name?: string };
   isFormValid: boolean;
-  data: UserType[] | null;
+  data: User_Type[] | null;
   setErrors: React.Dispatch<React.SetStateAction<{ name?: string }>>;
   setIsFormValid: React.Dispatch<React.SetStateAction<boolean>>;
-  setData: React.Dispatch<React.SetStateAction<UserType[] | null>>;
+  setData: React.Dispatch<React.SetStateAction<User_Type[] | null>>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -35,7 +35,7 @@ export const NameProvider = ({ children }: { children: ReactNode }) => {
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<{ name?: string }>({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [data, setData] = useState<UserType[] | null>(null);
+  const [data, setData] = useState<User_Type[] | null>(null);
 
   const getUsers = async () => {
     const response = await fetch("/api/user");
