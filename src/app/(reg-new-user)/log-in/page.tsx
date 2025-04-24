@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const Log_In = () => {
   const router = useRouter();
 
-  const { email, setEmail, password, setPassword, errors, handleSubmit, user } =
+  const { email, setEmail, password, setPassword, errors, handleSubmit } =
     useLogIn();
 
   const onSubmit = async () => {

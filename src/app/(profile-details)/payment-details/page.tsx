@@ -16,9 +16,6 @@ import { months, years } from "@/constants/Dates";
 import ErrorText from "@/app/_components/ErrorText";
 import { useEffect, useState } from "react";
 
-months;
-years;
-
 const PaymentDetails = () => {
   const [country, setCountry] = useState("");
   const [first_name, setFirst_name] = useState("");
@@ -40,7 +37,7 @@ const PaymentDetails = () => {
   const [isFormValid, setIsFormValid] = useState(false);
 
   const validateForm = () => {
-    let errors: {
+    const errors: {
       country?: string;
       first_name?: string;
       last_name?: string;

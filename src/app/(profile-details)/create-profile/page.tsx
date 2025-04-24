@@ -18,7 +18,6 @@ const CreateProfile = () => {
   const [about, setAbout] = useState("");
   const [social_media_url, setSocial_media_url] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File>();
   const [avatar_image, setAvatar_image] = useState("");
   const { user } = useLogIn();
@@ -39,7 +38,7 @@ const CreateProfile = () => {
       setFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
+        setAvatar_image(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -108,14 +107,14 @@ const CreateProfile = () => {
   };
 
   const validateForm = () => {
-    let errors: {
+    const errors: {
       name?: string;
       about?: string;
       social_media_url?: string;
       photoPreview?: string;
     } = {};
 
-    if (!photoPreview) {
+    if (!avatar_image) {
       errors.photoPreview = "Please enter image";
     }
     if (!name) {
@@ -138,7 +137,7 @@ const CreateProfile = () => {
       route.push("/payment-details");
     }
     validateForm();
-  }, [name, about, social_media_url, photoPreview, user]);
+  }, [name, about, social_media_url, avatar_image, user]);
 
   return (
     <div className="flex flex-col justify-center items-center w-[100vw] h-[100vh] ">
@@ -155,9 +154,9 @@ const CreateProfile = () => {
             <div className="relative w-44 h-44 ">
               <label htmlFor="photo-upload" className="cursor-pointer">
                 <div className="w-44 h-44 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden">
-                  {photoPreview ? (
+                  {avatar_image ? (
                     <Image
-                      src={photoPreview || "/placeholder.svg"}
+                      src={avatar_image || "/placeholder.svg"}
                       alt="Profile preview"
                       fill
                       className="object-cover rounded-full"
