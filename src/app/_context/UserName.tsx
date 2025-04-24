@@ -44,7 +44,7 @@ export const NameProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const validateForm = () => {
-    let errors: { name?: string } = {};
+    const errors: { name?: string } = {};
 
     if (!name) {
       errors.name = "Username is required";

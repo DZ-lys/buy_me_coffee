@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useRegisterName } from "@/app/_context/UserName";
 import { useRegisterEmail } from "@/app/_context/UserEmail";
 
-const signEmailPass = () => {
+const SignEmailPass = () => {
   const router = useRouter();
   const { name } = useRegisterName();
   const {
@@ -77,4 +77,4 @@ const signEmailPass = () => {
   );
 };
 
-export default signEmailPass;
+export default SignEmailPass;

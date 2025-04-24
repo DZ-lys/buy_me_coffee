@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 
-function signUp() {
+function SignUp() {
   const { name, setName, errors, isFormValid } = useRegisterName();
-
   const router = useRouter();
+
   return (
     <div className="flex flex-col gap-5 justify-center items-center w-[50%] h-[100vh] ">
       <div className="flex absolute top-8 right-20">
@@ -52,4 +52,4 @@ function signUp() {
   );
 }
 
-export default signUp;
+export default SignUp;

@@ -98,12 +98,12 @@ const PaymentDetails = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setCountry(""),
-          setFirst_name(""),
-          setLast_name(""),
-          setCard_number(""),
-          setExpiry_date({}),
-          setCVC("");
+        setCountry("");
+        setFirst_name("");
+        setLast_name("");
+        setCard_number("");
+        setExpiry_date({});
+        setCVC("");
         return true;
       } else {
         alert("Error: " + data.error);

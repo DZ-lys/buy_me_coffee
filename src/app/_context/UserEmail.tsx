@@ -74,7 +74,7 @@ export const EmailProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const validateForm = () => {
-    let errors: { email?: string; password?: string } = {};
+    const errors: { email?: string; password?: string } = {};
 
     if (!email) {
       errors.email = "Email is required";
