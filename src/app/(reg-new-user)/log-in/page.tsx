@@ -2,7 +2,7 @@
 import { useLogIn } from "@/app/_context/UserLogIn";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UserFullInfoType } from "@/utils/types/type";
+import { User_Type } from "@/utils/types/type";
 import { XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +13,7 @@ const Log_In = () => {
     useLogIn();
 
   const onSubmit = async () => {
-    handleSubmit({ email, password } as UserFullInfoType);
+    handleSubmit({ email, password } as User_Type);
   };
 
   return (
